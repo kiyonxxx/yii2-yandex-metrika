@@ -3,7 +3,7 @@
     "type": "yii2-extension",
     "license": "MIT",
     "homepage": "https://gitlab.com/dicr/yii2-yandex-metrika",
-    "description": "Яндекс.Метрика клиент для Yii2",
+    "description": "Яндекс.Метрика Report API клиент для Yii2",
     "keywords": ["dicr", "yii2", "yandex", "metrika", "api", "client"],
     "authors": [
         {
@@ -25,7 +25,7 @@
         "dicr/yii2-helper": "~4.0",
         "dicr/yii2-http": "~2.1",
         "dicr/yii2-json": "~2.0",
-        "dicr/yii2-validate": "~2.2"
+        "dicr/yii2-validate": "~2.3"
     },
     "autoload": {
         "psr-4": {

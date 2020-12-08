@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26fa1750351925697ce9159849280785",
+    "content-hash": "fd1b44402e13fdb762debb750646bd62",
     "packages": [
         {
             "name": "bower-asset/inputmask",
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -330,16 +330,16 @@
         },
         {
             "name": "dicr/yii2-validate",
-            "version": "2.2.3",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/dicr/yii2-validate.git",
-                "reference": "d821586ebe1595742214b0821ed9a82aa7b1124d"
+                "reference": "a46e747947ad2d59b0903a14cdee0ef180f393a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-validate/repository/archive.zip?sha=d821586ebe1595742214b0821ed9a82aa7b1124d",
-                "reference": "d821586ebe1595742214b0821ed9a82aa7b1124d",
+                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-validate/repository/archive.zip?sha=a46e747947ad2d59b0903a14cdee0ef180f393a1",
+                "reference": "a46e747947ad2d59b0903a14cdee0ef180f393a1",
                 "shasum": ""
             },
             "require": {
@@ -381,7 +381,7 @@
             "support": {
                 "source": "https://gitlab.com/dicr/yii2-validate.git"
             },
-            "time": "2020-10-31T15:36:34+03:00"
+            "time": "2020-12-03T20:18:18+05:00"
         },
         {
             "name": "ezyang/htmlpurifier",

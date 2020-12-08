@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 04.12.20 02:21:28
+ * @version 08.12.20 10:30:35
  */
 
 declare(strict_types = 1);
@@ -57,7 +57,7 @@ class Goal extends JsonEntity
     /** @var bool Является ли цель ретаргетинговой */
     public $isRetargeting;
 
-    /** @var string Тип цели для клиентов Яндекс.Маркета. */
+    /** @var string Тип цели для клиентов Яндекс.Маркета. (FLAG_*) */
     public $flag;
 
     /** @var GoalCondition[] Список структур с условиями цели */
@@ -79,7 +79,25 @@ class Goal extends JsonEntity
     public function rules() : array
     {
         return [
-            ['conditions', EntityValidator::class, 'class' => [GoalCondition::class]]
+            ['id', 'default'],
+            ['id', 'integer', 'min' => 1],
+            ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['name', 'required'],
+            ['name', 'string'],
+
+            ['type', 'required'],
+            ['type', 'in', 'range' => self::TYPES],
+
+            ['isRetargeting', 'default'],
+            ['isRetargeting', 'boolean'],
+            ['isRetargeting', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['flag', 'default'],
+            ['flag', 'in', 'range' => self::FLAGS],
+
+            ['conditions', 'default'],
+            ['conditions', EntityValidator::class]
         ];
     }
 }

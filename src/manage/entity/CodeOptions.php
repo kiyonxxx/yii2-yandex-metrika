@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:03:03
+ * @version 08.12.20 09:08:16
  */
 
 declare(strict_types = 1);
@@ -68,7 +68,20 @@ class CodeOptions extends JsonEntity
     public function rules() : array
     {
         return [
-            ['informer', EntityValidator::class, 'class' => Informer::class]
+            ['async', 'default'],
+            ['async', 'boolean'],
+            ['async', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['informer', 'default'],
+            ['informer', EntityValidator::class, 'class' => Informer::class],
+
+            [['visor', 'trackHash', 'xmlSite', 'clickmap', 'inOneLine', 'ecommerce', 'alternativeCdn'], 'default'],
+            [['visor', 'trackHash', 'xmlSite', 'clickmap', 'inOneLine', 'ecommerce', 'alternativeCdn'], 'boolean'],
+            [['visor', 'trackHash', 'xmlSite', 'clickmap', 'inOneLine', 'ecommerce', 'alternativeCdn'], 'filter',
+                'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['ecommerceObject', 'default'],
+            ['ecommerceObject', 'string']
         ];
     }
 }

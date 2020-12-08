@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:35:37
+ * @version 08.12.20 10:27:36
  */
 
 declare(strict_types = 1);
@@ -81,4 +81,35 @@ class Filter extends JsonEntity
 
     /** @var bool Фильтровать по поддоменам */
     public $withSubdomains;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['id', 'default'],
+            ['id', 'integer', 'min' => 1],
+            ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['attr', 'required'],
+            ['attr', 'in', 'range' => self::ATTRS],
+
+            ['value', 'required'],
+            ['value', 'string'],
+
+            ['action', 'required'],
+            ['action', 'in', 'range' => self::ACTIONS],
+
+            ['status', 'default'],
+            ['status', 'in', 'range' => self::STATUSES],
+
+            [['startIp', 'endIp'], 'default'],
+            [['startIp', 'endIp'], 'ip'],
+
+            ['withSubdomains', 'default'],
+            ['withSubdomains', 'boolean'],
+            ['withSubdomains', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true]
+        ];
+    }
 }

@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:35:37
+ * @version 08.12.20 11:44:56
  */
 
 declare(strict_types = 1);
@@ -74,6 +74,30 @@ class Operation extends JsonEntity
     /** @var string Значение для замены. */
     public $value;
 
-    /** @var string Статус операции. */
+    /** @var string Статус операции. (STATUS_*) */
     public $status;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['id', 'default'],
+            ['id', 'integer', 'min' => 1],
+            ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['action', 'required'],
+            ['action', 'in', 'range' => self::ACTIONS],
+
+            ['attr', 'required'],
+            ['attr', 'in', 'range' => self::ATTRS],
+
+            ['value', 'required'],
+            ['value', 'string'],
+
+            ['status', 'default'],
+            ['status', 'in', 'range' => self::STATUSES]
+        ];
+    }
 }

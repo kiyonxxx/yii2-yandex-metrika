@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 04.12.20 00:56:57
+ * @version 08.12.20 11:20:55
  */
 
 declare(strict_types = 1);
@@ -69,7 +69,7 @@ class Informer extends JsonEntity
     /** @var bool Разрешение отображения информера */
     public $enabled;
 
-    /** @var string Тип информера */
+    /** @var string Тип информера (TYPE_*) */
     public $type;
 
     /** @var int Размер информера. (SIZE_*) */
@@ -98,4 +98,31 @@ class Informer extends JsonEntity
 
     /** @var int Цвет стрелки на информере. (COLOR_*) */
     public $colorArrow;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['enabled', 'default'],
+            ['enabled', 'boolean'],
+            ['enabled', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['type', 'default'],
+            ['type', 'in', 'range' => self::TYPES],
+
+            ['size', 'default'],
+            ['size', 'in', 'range' => self::SIZES],
+
+            ['indicator', 'default'],
+            ['indicator', 'in', 'range' => self::INDICATORS],
+
+            [['colorStart', 'colorEnd'], 'default'],
+            [['colorStart', 'colorEnd'], 'string', 'length' => 8],
+
+            [['colorText', 'colorArrow'], 'default'],
+            [['colorText', 'colorArrow'], 'in', 'range' => self::COLORS]
+        ];
+    }
 }

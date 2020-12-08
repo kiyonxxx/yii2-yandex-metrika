@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.12.20 20:55:27
+ * @version 08.12.20 10:01:53
  */
 
 declare(strict_types = 1);
@@ -36,4 +36,26 @@ class CodeStatusInfo extends JsonEntity
 
     /** @var string Инфицированный сайт (сайт, на котором установлен счетчик или одно из его зеркал). */
     public $infected;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            [['length', 'found', 'match', 'httpCode'], 'default'],
+            [['length', 'found', 'match', 'httpCode'], 'integer', 'min' => 0],
+            [['length', 'found', 'match', 'httpCode'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['httpMsg', 'default'],
+            ['httpMsg', 'string'],
+
+            ['duration', 'default'],
+            ['duration', 'number', 'min' => 0],
+            ['duration', 'filter', 'filter' => 'floatval', 'skipOnEmpty' => true],
+
+            ['infected', 'default'],
+            ['infected', 'string']
+        ];
+    }
 }

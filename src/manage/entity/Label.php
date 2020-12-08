@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:35:37
+ * @version 08.12.20 11:21:58
  */
 
 declare(strict_types = 1);
@@ -21,4 +21,19 @@ class Label extends JsonEntity
 
     /** @var string Имя метки */
     public $name;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['id', 'default'],
+            ['id', 'integer', 'min' => 1],
+            ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['name', 'required'],
+            ['name', 'string']
+        ];
+    }
 }

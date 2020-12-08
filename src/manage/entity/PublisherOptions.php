@@ -3,13 +3,14 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 07.12.20 21:50:18
+ * @version 08.12.20 11:46:29
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\JsonEntity;
+use dicr\validate\StringsValidator;
 
 /**
  * Настройки контентной аналитики для счетчика.
@@ -27,4 +28,22 @@ class PublisherOptions extends JsonEntity
 
     /** @var string[] Доступные варианты разметки сайта. */
     public $schemaOptions;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['enabled', 'default'],
+            ['enabled', 'boolean'],
+            ['enabled', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['schema', 'required'],
+            ['schema', 'string'],
+
+            ['schemaOptions', 'default'],
+            ['schemaOptions', StringsValidator::class]
+        ];
+    }
 }

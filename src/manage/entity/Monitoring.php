@@ -3,13 +3,14 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:20:59
+ * @version 08.12.20 11:31:40
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\JsonEntity;
+use dicr\validate\StringsValidator;
 
 /**
  * Настройки мониторинга сайта счетчика.
@@ -71,4 +72,32 @@ class Monitoring extends JsonEntity
      * Порядок идентификаторов соответствует порядку телефонных номеров в параметре possible_phones.
      */
     public $possiblePhoneIds;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['enableMonitoring', 'default'],
+            ['enableMonitoring', 'boolean'],
+            ['enableMonitoring', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['emails', 'default'],
+            ['emails', StringsValidator::class],
+
+            [['smsAllowed', 'enableSms'], 'default'],
+            [['smsAllowed', 'enableSms'], 'boolean'],
+            [['smsAllowed', 'enableSms'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['smsTime', 'default'],
+            ['smsTime', 'string'],
+
+            [['phones', 'possiblePhones'], 'default'],
+            [['phones', 'possiblePhones'], StringsValidator::class],
+
+            [['phoneIds', 'possiblePhoneIds'], 'default'],
+            [['phoneIds', 'possiblePhoneIds'], 'each', 'rule' => ['integer', 'min' => 1]],
+        ];
+    }
 }

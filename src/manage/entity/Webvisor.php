@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:10:32
+ * @version 08.12.20 11:50:24
  */
 
 declare(strict_types = 1);
@@ -63,4 +63,33 @@ class Webvisor extends JsonEntity
 
     /** @var bool */
     public $allowWv2;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['urls', 'default'],
+            ['urls', 'string'],
+
+            ['archEnabled', 'default'],
+            ['archEnabled', 'boolean'],
+            ['archEnabled', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['archType', 'default'],
+            ['archType', 'in', 'range' => self::ARCH_TYPES],
+
+            ['loadPlayerType', 'default'],
+            ['loadPlayerType', 'in', 'range' => self::LOAD_TYPES],
+
+            ['wvVersion', 'default'],
+            ['wvVersion', 'integer', 'min' => 1],
+            ['wvVersion', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            [['wvForms', 'allowWv2'], 'default'],
+            [['wvForms', 'allowWv2'], 'boolean'],
+            [['wvForms', 'allowWv2'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+        ];
+    }
 }

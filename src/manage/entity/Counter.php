@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:35:37
+ * @version 08.12.20 13:06:14
  */
 
 declare(strict_types = 1);
@@ -11,6 +11,7 @@ namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\EntityValidator;
 use dicr\json\JsonEntity;
+use yii\validators\StringValidator;
 
 /**
  * Счетчик метрики
@@ -116,6 +117,11 @@ class Counter extends JsonEntity
 
     /** @var int фильтровать роботов по строгим правилам и по поведению */
     public const FILTER_ROBOTS_BEHAVIOR = 2;
+
+    /** @var int[] */
+    public const FILTER_ROBOTS = [
+        self::FILTER_ROBOTS_NO, self::FILTER_ROBOTS_STRICT, self::FILTER_ROBOTS_BEHAVIOR
+    ];
 
     /** @var int Идентификатор счетчика */
     public $id;
@@ -258,6 +264,115 @@ class Counter extends JsonEntity
     /**
      * @inheritDoc
      */
+    public function rules() : array
+    {
+        return [
+            ['id', 'default'],
+            ['id', 'integer', 'min' => 1],
+            ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['status', 'default'],
+            ['status', 'in', 'range' => self::STATUSES],
+
+            ['ownerLogin', 'default'],
+            ['ownerLogin', 'string'],
+
+            ['codeStatus', 'default'],
+            ['codeStatus', 'in', 'range' => self::CODE_STATUSES],
+
+            ['codeStatusInfo', 'default'],
+            ['codeStatusInfo', EntityValidator::class],
+
+            ['name', 'default'],
+            ['name', 'string'],
+
+            ['site2', 'default'],
+            ['site2', EntityValidator::class],
+
+            ['type', 'default'],
+            ['type', 'in', 'range' => self::TYPES],
+
+            ['favorite', 'default'],
+            ['favorite', 'boolean'],
+            ['favorite', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['gdprAgreementAccepted', 'default'],
+            ['gdprAgreementAccepted', 'boolean'],
+            ['gdprAgreementAccepted', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['permission', 'default'],
+            ['permission', 'in', 'range' => self::PERMISSIONS],
+
+            [['mirrors2', 'goals', 'filters', 'operations', 'grants', 'labels', 'webvisor', 'codeOptions'], 'default'],
+            [['mirrors2', 'goals', 'filters', 'operations', 'grants', 'labels', 'webvisor', 'codeOptions'],
+                EntityValidator::class],
+
+            ['createTime', 'default'],
+            ['createTime', 'date', 'format' => 'php:c'],
+
+            ['timeZoneName', 'default'],
+            ['timeZoneName', 'string'],
+
+            ['timeZoneOffset', 'default'],
+            ['timeZoneOffset', 'integer', 'min' => 0, 'max' => 1440],
+
+            ['connectStatus', 'default'],
+            ['connectStatus', 'in', 'range' => self::CONNECT_STATUSES],
+
+            ['organizationId', 'default'],
+            ['organizationId', 'integer', 'min' => 1],
+            ['organizationId', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['organizationName', 'default'],
+            ['organizationName', 'string'],
+
+            ['updateTime', 'default'],
+            ['updateTime', 'date'],
+
+            ['deleteTime', 'default'],
+            ['deleteTime', 'date'],
+
+            ['code', 'default'],
+            ['code', 'string'],
+
+            ['monitoring', 'default'],
+            ['monitoring', EntityValidator::class],
+
+            ['filterRobots', 'default'],
+            ['filterRobots', 'in', 'range' => self::FILTER_ROBOTS],
+
+            ['visitThreshold', 'default'],
+            ['visitThreshold', 'integer', 'min' => 0],
+
+            [['offlineOptions', 'publisherOptions'], 'default'],
+            [['offlineOptions', 'publisherOptions'], EntityValidator::class],
+
+            ['hideAddress', 'default'],
+            ['hideAddress', 'boolean'],
+
+            ['partnerId', 'default'],
+            ['partnerId', 'integer', 'min' => 1],
+            ['partnerId', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            ['site', 'default'],
+            ['site', 'string'],
+
+            ['currency', 'default'],
+            ['currency', 'integer', 'min' => 1],
+            ['currency', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            [['maxGoals', 'maxOperations', 'maxFilters'], 'default'],
+            [['maxGoals', 'maxOperations', 'maxFilters'], 'integer', 'min' => 0],
+            [['maxGoals', 'maxOperations', 'maxFilters'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
+
+            [['features', 'mirrors'], 'default'],
+            [['features', 'mirrors'], StringValidator::class],
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function attributeEntities() : array
     {
         return [
@@ -274,28 +389,6 @@ class Counter extends JsonEntity
             'monitoring' => Monitoring::class,
             'offlineOptions' => OfflineOptions::class,
             'publisherOptions' => PublisherOptions::class
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rules() : array
-    {
-        return [
-            ['codeStatusInfo', EntityValidator::class],
-            ['site2', EntityValidator::class],
-            ['mirrors2', EntityValidator::class],
-            ['goals', EntityValidator::class],
-            ['filters', EntityValidator::class],
-            ['operations', EntityValidator::class],
-            ['grants', EntityValidator::class],
-            ['labels', EntityValidator::class],
-            ['webvisor', EntityValidator::class],
-            ['codeOptions', EntityValidator::class],
-            ['monitoring', EntityValidator::class],
-            ['offlineOptions', EntityValidator::class],
-            ['publisherOptions', EntityValidator::class]
         ];
     }
 }

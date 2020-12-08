@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 04.12.20 02:19:42
+ * @version 08.12.20 10:35:38
  */
 
 declare(strict_types = 1);
@@ -41,4 +41,18 @@ class GoalCondition extends JsonEntity
 
     /** @var string Адрес страницы или части страницы для условия */
     public $url;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules() : array
+    {
+        return [
+            ['type', 'required'],
+            ['type', 'in', 'range' => self::TYPES],
+
+            ['url', 'required'],
+            ['url', 'string']
+        ];
+    }
 }

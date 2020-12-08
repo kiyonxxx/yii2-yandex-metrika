@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 06:52:47
+ * @version 08.12.20 15:13:14
  */
 
 declare(strict_types = 1);
@@ -12,6 +12,8 @@ namespace dicr\yandex\metrika\manage;
 use dicr\validate\StringsValidator;
 use dicr\yandex\metrika\AbstractRequest;
 use yii\httpclient\Request;
+
+use function array_merge;
 
 /**
  * Список доступных счетчиков.
@@ -154,13 +156,13 @@ class CounterListRequest extends AbstractRequest
     public $searchString;
 
     /** @var ?string Сортировка (SORT_*) */
-    public $sort = self::SORT_DEFAULT;
+    public $sort;
 
     /**
      * @var ?string Фильтр по статусу счетчика. По умолчанию включен. (STATUS_*)
      * Значение по умолчанию: Active
      */
-    public $status = self::STATUS_ACTIVE;
+    public $status;
 
     /** @var ?string Фильтр по типу счетчика. (TYPE_*) */
     public $type;
@@ -170,11 +172,11 @@ class CounterListRequest extends AbstractRequest
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['connectStatus', 'default'],
             ['connectStatus', 'in', 'range' => self::CONNECT_STATUSES],
 
-            ['favorite', 'default', 'value' => 0],
+            ['favorite', 'default'],
             ['favorite', 'boolean'],
             ['favorite', 'filter', 'filter' => 'intval'],
 
@@ -212,7 +214,7 @@ class CounterListRequest extends AbstractRequest
 
             ['type', 'default'],
             ['type', 'in', 'range' => self::TYPES]
-        ];
+        ]);
     }
 
     /**
@@ -220,14 +222,12 @@ class CounterListRequest extends AbstractRequest
      */
     public function attributesToJson() : array
     {
-        return [
-            'field' => static function ($val) : ?string {
-                return empty($val) ? null : implode(',', $val);
-            },
-            'permission' => static function ($val) : ?string {
-                return empty($val) ? null : implode(',', $val);
-            }
-        ];
+        return array_merge(parent::attributesToJson(), [
+            'favorite' => [static::class, 'formatBoolean'],
+            'field' => [static::class, 'formatArray'],
+            'permission' => [static::class, 'formatArray'],
+            'reverse' => [static::class, 'formatBoolean'],
+        ]);
     }
 
     /**
@@ -237,9 +237,7 @@ class CounterListRequest extends AbstractRequest
     protected function httpRequest() : Request
     {
         return $this->client->httpClient
-            ->get(array_merge($this->json, [
-                0 => '/management/v1/counters'
-            ]), null, $this->headers());
+            ->get(array_merge($this->json, ['/management/v1/counters']), null, $this->headers());
     }
 
     /**

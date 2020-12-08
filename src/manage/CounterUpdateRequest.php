@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 12:57:55
+ * @version 08.12.20 21:31:08
  */
 
 declare(strict_types = 1);
@@ -16,7 +16,7 @@ use dicr\yandex\metrika\manage\entity\Counter;
 use dicr\yandex\metrika\manage\entity\CounterUpdate;
 use yii\httpclient\Request;
 
-use function implode;
+use function array_merge;
 
 /**
  * Изменение счетчика.
@@ -42,9 +42,9 @@ class CounterUpdateRequest extends AbstractRequest
      */
     public function attributeEntities() : array
     {
-        return [
+        return array_merge(parent::attributeEntities(), [
             'counter' => CounterUpdate::class
-        ];
+        ]);
     }
 
     /**
@@ -52,7 +52,7 @@ class CounterUpdateRequest extends AbstractRequest
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['counterId', 'required'],
             ['counterId', 'integer', 'min' => 1],
             ['counterId', 'filter', 'filter' => 'intval'],
@@ -62,7 +62,7 @@ class CounterUpdateRequest extends AbstractRequest
 
             ['counter', 'required'],
             ['counter', EntityValidator::class]
-        ];
+        ]);
     }
 
     /**
@@ -70,11 +70,9 @@ class CounterUpdateRequest extends AbstractRequest
      */
     public function attributesToJson() : array
     {
-        return [
-            'field' => static function ($val) : ?string {
-                return empty($val) ? null : implode(',', (array)$val);
-            }
-        ];
+        return array_merge(parent::attributesToJson(), [
+            'field' => [static::class, 'formatArray']
+        ]);
     }
 
     /**

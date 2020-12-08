@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 12:08:28
+ * @version 08.12.20 21:16:56
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
+
+use dicr\yandex\metrika\Entity;
 
 /**
  * Данные для обновления счетчика.
  *
  * @link https://yandex.ru/dev/metrika/doc/api2/management/counters/editcounter.html
  */
-class CounterUpdate extends Counter
+class CounterUpdate extends Entity
 {
     /**
      * @var bool Нужно ли удалить зеркала

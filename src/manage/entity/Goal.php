@@ -3,19 +3,21 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 10:30:35
+ * @version 08.12.20 21:25:49
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\EntityValidator;
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Тип для описания цели
  */
-class Goal extends JsonEntity
+class Goal extends Entity
 {
     /** @var string посещение страниц */
     public const TYPE_URL = 'url';
@@ -68,9 +70,9 @@ class Goal extends JsonEntity
      */
     public function attributeEntities() : array
     {
-        return [
+        return array_merge(parent::attributeEntities(), [
             'conditions' => [GoalCondition::class]
-        ];
+        ]);
     }
 
     /**
@@ -78,7 +80,7 @@ class Goal extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['id', 'default'],
             ['id', 'integer', 'min' => 1],
             ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -98,6 +100,6 @@ class Goal extends JsonEntity
 
             ['conditions', 'default'],
             ['conditions', EntityValidator::class]
-        ];
+        ]);
     }
 }

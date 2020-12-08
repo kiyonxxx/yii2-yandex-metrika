@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:20:55
+ * @version 08.12.20 21:26:42
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Информер счетчика.
  */
-class Informer extends JsonEntity
+class Informer extends Entity
 {
     /** @var string простой */
     public const TYPE_SIMPLE = 'simple';
@@ -104,7 +106,7 @@ class Informer extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['enabled', 'default'],
             ['enabled', 'boolean'],
             ['enabled', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -123,6 +125,6 @@ class Informer extends JsonEntity
 
             [['colorText', 'colorArrow'], 'default'],
             [['colorText', 'colorArrow'], 'in', 'range' => self::COLORS]
-        ];
+        ]);
     }
 }

@@ -3,19 +3,21 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 09:08:16
+ * @version 08.12.20 21:19:06
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\EntityValidator;
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Настройки кода счетчика.
  */
-class CodeOptions extends JsonEntity
+class CodeOptions extends Entity
 {
     /** @var bool Асинхронный код счетчика. */
     public $async;
@@ -57,9 +59,9 @@ class CodeOptions extends JsonEntity
      */
     public function attributeEntities() : array
     {
-        return [
+        return array_merge(parent::attributeEntities(), [
             'informer' => Informer::class
-        ];
+        ]);
     }
 
     /**
@@ -67,7 +69,7 @@ class CodeOptions extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['async', 'default'],
             ['async', 'boolean'],
             ['async', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -82,6 +84,6 @@ class CodeOptions extends JsonEntity
 
             ['ecommerceObject', 'default'],
             ['ecommerceObject', 'string']
-        ];
+        ]);
     }
 }

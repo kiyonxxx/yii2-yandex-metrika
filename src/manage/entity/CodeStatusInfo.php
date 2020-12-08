@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 10:01:53
+ * @version 08.12.20 21:21:30
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Информация о статусе счетчика.
  */
-class CodeStatusInfo extends JsonEntity
+class CodeStatusInfo extends Entity
 {
     /** @var int Длина контента в байтах. */
     public $length;
@@ -42,7 +44,7 @@ class CodeStatusInfo extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             [['length', 'found', 'match', 'httpCode'], 'default'],
             [['length', 'found', 'match', 'httpCode'], 'integer', 'min' => 0],
             [['length', 'found', 'match', 'httpCode'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -56,6 +58,6 @@ class CodeStatusInfo extends JsonEntity
 
             ['infected', 'default'],
             ['infected', 'string']
-        ];
+        ]);
     }
 }

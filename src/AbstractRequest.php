@@ -3,13 +3,12 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 07.12.20 21:53:11
+ * @version 08.12.20 20:31:59
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika;
 
-use dicr\json\JsonEntity;
 use dicr\validate\ValidateException;
 use Yii;
 use yii\base\Exception;
@@ -20,7 +19,7 @@ use yii\httpclient\Request;
 /**
  * Абстрактный запрос к API.
  */
-abstract class AbstractRequest extends JsonEntity
+abstract class AbstractRequest extends Entity
 {
     /** @var string формат JSON */
     public const FORMAT_JSON = 'json';
@@ -53,7 +52,8 @@ abstract class AbstractRequest extends JsonEntity
     {
         return [
             'Authorization' => 'OAuth ' . $this->client->token,
-            'Content-Type' => 'application/x-yametrika+json'
+            'Content-Type' => 'application/x-yametrika+json',
+            'Accept' => 'application/json'
         ];
     }
 

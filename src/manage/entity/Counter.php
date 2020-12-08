@@ -3,20 +3,22 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 13:06:14
+ * @version 08.12.20 21:23:32
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
 use dicr\json\EntityValidator;
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
 use yii\validators\StringValidator;
+
+use function array_merge;
 
 /**
  * Счетчик метрики
  */
-class Counter extends JsonEntity
+class Counter extends Entity
 {
     /** @var string Счетчик активен */
     public const STATUS_ACTIVE = 'Active';
@@ -224,7 +226,7 @@ class Counter extends JsonEntity
     /** @var PublisherOptions */
     public $publisherOptions;
 
-    /* Недокументированные из JSON-ответов */
+    /* Недокументированные из JSON-ответов *****************************************************************/
 
     /** @var bool */
     public $hideAddress;
@@ -255,18 +257,37 @@ class Counter extends JsonEntity
      */
     public $features;
 
-    /**
-     * @var string[] домены зеркал
-     * ["metrica.yandex.com/about/"]
-     */
+    /** @var string[] домены зеркал (["metrica.yandex.com/about/"]) */
     public $mirrors;
+
+    /**
+     * @inheritDoc
+     */
+    public function attributeEntities() : array
+    {
+        return array_merge(parent::attributeEntities(), [
+            'codeStatusInfo' => CodeStatusInfo::class,
+            'site2' => Site::class,
+            'mirrors2' => [Site::class],
+            'goals' => [Goal::class],
+            'filters' => [Filter::class],
+            'operations' => [Operation::class],
+            'grants' => [Grant::class],
+            'labels' => [Label::class],
+            'webvisor' => Webvisor::class,
+            'codeOptions' => CodeOptions::class,
+            'monitoring' => Monitoring::class,
+            'offlineOptions' => OfflineOptions::class,
+            'publisherOptions' => PublisherOptions::class
+        ]);
+    }
 
     /**
      * @inheritDoc
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['id', 'default'],
             ['id', 'integer', 'min' => 1],
             ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -327,10 +348,10 @@ class Counter extends JsonEntity
             ['organizationName', 'string'],
 
             ['updateTime', 'default'],
-            ['updateTime', 'date'],
+            ['updateTime', 'datetime'],
 
             ['deleteTime', 'default'],
-            ['deleteTime', 'date'],
+            ['deleteTime', 'datetime'],
 
             ['code', 'default'],
             ['code', 'string'],
@@ -367,28 +388,6 @@ class Counter extends JsonEntity
 
             [['features', 'mirrors'], 'default'],
             [['features', 'mirrors'], StringValidator::class],
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function attributeEntities() : array
-    {
-        return [
-            'codeStatusInfo' => CodeStatusInfo::class,
-            'site2' => Site::class,
-            'mirrors2' => [Site::class],
-            'goals' => [Goal::class],
-            'filters' => [Filter::class],
-            'operations' => [Operation::class],
-            'grants' => [Grant::class],
-            'labels' => [Label::class],
-            'webvisor' => Webvisor::class,
-            'codeOptions' => CodeOptions::class,
-            'monitoring' => Monitoring::class,
-            'offlineOptions' => OfflineOptions::class,
-            'publisherOptions' => PublisherOptions::class
-        ];
+        ]);
     }
 }

@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:16:04
+ * @version 09.12.20 00:09:07
  */
 
 declare(strict_types = 1);
@@ -12,7 +12,6 @@ namespace dicr\yandex\metrika\manage;
 use dicr\validate\StringsValidator;
 use dicr\yandex\metrika\AbstractRequest;
 use dicr\yandex\metrika\manage\entity\Counter;
-use yii\base\Exception;
 use yii\httpclient\Request;
 
 /**
@@ -37,14 +36,24 @@ class CounterInfoRequest extends AbstractRequest
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['counterId', 'required'],
             ['counterId', 'integer', 'min' => 1],
             ['counterId', 'filter', 'filter' => 'intval'],
 
             ['field', 'default'],
             ['field', StringsValidator::class]
-        ];
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function attributesToJson() : array
+    {
+        return array_merge(parent::attributesToJson(), [
+            'field' => [static::class, 'formatArray']
+        ]);
     }
 
     /**
@@ -54,8 +63,9 @@ class CounterInfoRequest extends AbstractRequest
     {
         $url = ['/management/v1/counter/' . $this->counterId];
 
-        if (! empty($this->field)) {
-            $url['field'] = implode(',', (array)$this->field);
+        $data = $this->json;
+        if (! empty($data['field'])) {
+            $url['field'] = $data['field'];
         }
 
         return $this->client->httpClient
@@ -68,9 +78,6 @@ class CounterInfoRequest extends AbstractRequest
     public function send() : Counter
     {
         $data = parent::send();
-        if (empty($data['counter'])) {
-            throw new Exception('Не найдены данные в ответе');
-        }
 
         return new Counter([
             'json' => $data['counter']

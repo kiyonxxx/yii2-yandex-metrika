@@ -3,9 +3,10 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:12:44
+ * @version 09.12.20 00:12:43
  */
 
+declare(strict_types = 1);
 namespace dicr\tests\manage;
 
 use dicr\tests\AbstractTest;

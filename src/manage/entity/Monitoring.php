@@ -3,19 +3,21 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:31:40
+ * @version 08.12.20 21:27:15
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
 use dicr\validate\StringsValidator;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Настройки мониторинга сайта счетчика.
  */
-class Monitoring extends JsonEntity
+class Monitoring extends Entity
 {
     /** @var bool Уведомления для мониторинга доступности сайта. */
     public $enableMonitoring;
@@ -78,7 +80,7 @@ class Monitoring extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['enableMonitoring', 'default'],
             ['enableMonitoring', 'boolean'],
             ['enableMonitoring', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -98,6 +100,6 @@ class Monitoring extends JsonEntity
 
             [['phoneIds', 'possiblePhoneIds'], 'default'],
             [['phoneIds', 'possiblePhoneIds'], 'each', 'rule' => ['integer', 'min' => 1]],
-        ];
+        ]);
     }
 }

@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 10:27:36
+ * @version 08.12.20 21:25:19
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Фильтр счетчика.
  */
-class Filter extends JsonEntity
+class Filter extends Entity
 {
     /** @var string заголовок страницы */
     public const ATTR_TITLE = 'title';
@@ -87,7 +89,7 @@ class Filter extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['id', 'default'],
             ['id', 'integer', 'min' => 1],
             ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -110,6 +112,6 @@ class Filter extends JsonEntity
             ['withSubdomains', 'default'],
             ['withSubdomains', 'boolean'],
             ['withSubdomains', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true]
-        ];
+        ]);
     }
 }

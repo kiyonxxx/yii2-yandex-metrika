@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 06:43:49
+ * @version 09.12.20 00:11:42
  */
 
 declare(strict_types = 1);
@@ -20,6 +20,7 @@ use yii\httpclient\Client;
  * Клиент Яндекс.Метрика.
  *
  * @property-read Client $httpClient
+ * @link https://yandex.ru/dev/metrika/doc/api2/concept/about.html/
  */
 class MetrikaClient extends Component
 {

@@ -3,19 +3,21 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:46:29
+ * @version 08.12.20 21:28:07
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
 use dicr\validate\StringsValidator;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Настройки контентной аналитики для счетчика.
  */
-class PublisherOptions extends JsonEntity
+class PublisherOptions extends Entity
 {
     /** @var bool Сбор данных контентной аналитики */
     public $enabled;
@@ -34,7 +36,7 @@ class PublisherOptions extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['enabled', 'default'],
             ['enabled', 'boolean'],
             ['enabled', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -44,6 +46,6 @@ class PublisherOptions extends JsonEntity
 
             ['schemaOptions', 'default'],
             ['schemaOptions', StringsValidator::class]
-        ];
+        ]);
     }
 }

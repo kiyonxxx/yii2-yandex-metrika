@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:50:24
+ * @version 08.12.20 21:28:34
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Настройки webvisor счетчика.
  */
-class Webvisor extends JsonEntity
+class Webvisor extends Entity
 {
     /** @var string выключено */
     public const ARCH_TYPE_NONE = 'none';
@@ -69,7 +71,7 @@ class Webvisor extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['urls', 'default'],
             ['urls', 'string'],
 
@@ -90,6 +92,6 @@ class Webvisor extends JsonEntity
             [['wvForms', 'allowWv2'], 'default'],
             [['wvForms', 'allowWv2'], 'boolean'],
             [['wvForms', 'allowWv2'], 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
-        ];
+        ]);
     }
 }

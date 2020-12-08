@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:18:02
+ * @version 08.12.20 21:26:25
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Права доступа к счетчику.
  */
-class Grant extends JsonEntity
+class Grant extends Entity
 {
     /** @var string публичный доступ к статистике */
     public const PERM_PUBLIC_STAT = 'public_stat';
@@ -66,7 +68,7 @@ class Grant extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['userLogin', 'default'],
             ['userLogin', 'string'],
 
@@ -86,6 +88,6 @@ class Grant extends JsonEntity
             ['partnerDataAccess', 'default'],
             ['partnerDataAccess', 'boolean'],
             ['partnerDataAccess', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true]
-        ];
+        ]);
     }
 }

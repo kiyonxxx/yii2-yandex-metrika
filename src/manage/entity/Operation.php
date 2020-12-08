@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:44:56
+ * @version 08.12.20 21:27:44
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Операция счетчика.
  */
-class Operation extends JsonEntity
+class Operation extends Entity
 {
     /** @var string вырезать якорь из URL */
     public const ACTION_CUT_FRAGMENT = 'cut_fragment';
@@ -82,7 +84,7 @@ class Operation extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['id', 'default'],
             ['id', 'integer', 'min' => 1],
             ['id', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
@@ -98,6 +100,6 @@ class Operation extends JsonEntity
 
             ['status', 'default'],
             ['status', 'in', 'range' => self::STATUSES]
-        ];
+        ]);
     }
 }

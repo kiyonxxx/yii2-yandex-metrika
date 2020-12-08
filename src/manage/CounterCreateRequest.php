@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 12:54:36
+ * @version 08.12.20 14:24:13
  */
 
 declare(strict_types = 1);
@@ -14,6 +14,8 @@ use dicr\validate\StringsValidator;
 use dicr\yandex\metrika\AbstractRequest;
 use dicr\yandex\metrika\manage\entity\Counter;
 use yii\httpclient\Request;
+
+use function array_merge;
 
 /**
  * Создание счетчика
@@ -36,9 +38,9 @@ class CounterCreateRequest extends AbstractRequest
      */
     public function attributeEntities() : array
     {
-        return [
+        return array_merge(parent::attributeEntities(), [
             'counter' => Counter::class
-        ];
+        ]);
     }
 
     /**
@@ -46,13 +48,13 @@ class CounterCreateRequest extends AbstractRequest
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['field', 'default'],
             ['field', StringsValidator::class],
 
             ['counter', 'required'],
             ['counter', EntityValidator::class]
-        ];
+        ]);
     }
 
     /**
@@ -60,11 +62,9 @@ class CounterCreateRequest extends AbstractRequest
      */
     public function attributesToJson() : array
     {
-        return [
-            'field' => static function ($val) : ?string {
-                return empty($val) ? null : implode(',', (array)$val);
-            }
-        ];
+        return array_merge(parent::attributesToJson(), [
+            'field' => [static::class, 'formatArray']
+        ]);
     }
 
     /**

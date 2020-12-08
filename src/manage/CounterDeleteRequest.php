@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 13:02:49
+ * @version 08.12.20 14:22:32
  */
 
 declare(strict_types = 1);
@@ -28,11 +28,11 @@ class CounterDeleteRequest extends AbstractRequest
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['counterId', 'required'],
             ['counterId', 'integer', 'min' => 1],
             ['counterId', 'filter', 'filter' => 'intval']
-        ];
+        ]);
     }
 
     /**

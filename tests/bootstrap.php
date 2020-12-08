@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 07:35:16
+ * @version 08.12.20 22:47:24
  */
 
 /** @noinspection PhpUnhandledExceptionInspection */
@@ -39,7 +39,7 @@ new yii\console\Application([
         ],
         'metrika' => [
             'class' => dicr\yandex\metrika\MetrikaClient::class,
-            'token' => 'AQAAAAAK2j0dAAJ6e-ThPTOkrEJYv6IYipC6Bz7'
+            'token' => 'AQAAAAAK2j0dAAJ6e-ThPTOkrEJYv6IYipC6Bz8'
 
         ]
     ],

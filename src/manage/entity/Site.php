@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 11:47:17
+ * @version 08.12.20 21:28:20
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Информация о сайте.
  */
-class Site extends JsonEntity
+class Site extends Entity
 {
     /** @var string полный домен сайта, включая URL раздела (metrika.yandex.com/about/) */
     public $site;
@@ -29,12 +31,12 @@ class Site extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['site', 'required'],
             ['site', 'string'],
 
             ['domain', 'default'],
             ['domain', 'string']
-        ];
+        ]);
     }
 }

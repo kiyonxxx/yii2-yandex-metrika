@@ -3,18 +3,20 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 10:35:38
+ * @version 08.12.20 21:26:07
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage\entity;
 
-use dicr\json\JsonEntity;
+use dicr\yandex\metrika\Entity;
+
+use function array_merge;
 
 /**
  * Условие цели.
  */
-class GoalCondition extends JsonEntity
+class GoalCondition extends Entity
 {
     /** @var string содержит */
     public const TYPE_CONTAIN = 'contain';
@@ -47,12 +49,12 @@ class GoalCondition extends JsonEntity
      */
     public function rules() : array
     {
-        return [
+        return array_merge(parent::rules(), [
             ['type', 'required'],
             ['type', 'in', 'range' => self::TYPES],
 
             ['url', 'required'],
             ['url', 'string']
-        ];
+        ]);
     }
 }

@@ -1,15 +1,16 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 21:34:44
+ * @version 31.03.21 21:53:00
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\report;
 
 use dicr\validate\StringsValidator;
+use yii\helpers\Json;
 
 use function array_merge;
 
@@ -63,7 +64,7 @@ class PivotDrilldownRequest extends AbstractReportRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             [['date1', 'date2'], 'default'],
@@ -108,13 +109,13 @@ class PivotDrilldownRequest extends AbstractReportRequest
     /**
      * @inheritDoc
      */
-    public function attributesToJson() : array
+    public function attributesToJson(): array
     {
         return array_merge(parent::attributesToJson(), [
             'pivotDimensions' => [static::class, 'formatArray'],
             'pivotParentId' => [static::class, 'formatArray'],
             'pivotRowIds' => [static::class, 'formatArray'],
-            'rowIds' => [static::class, 'formatArray'],
+            'rowIds' => static fn($val) => Json::encode($val),
             'parentId' => [static::class, 'formatArray'],
             'sort' => [static::class, 'formatArray']
         ]);
@@ -123,7 +124,7 @@ class PivotDrilldownRequest extends AbstractReportRequest
     /**
      * @inheritDoc
      */
-    protected function url() : string
+    protected function url(): string
     {
         return '/stat/v1/data/pivot/drilldown';
     }

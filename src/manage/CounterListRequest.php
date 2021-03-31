@@ -1,15 +1,16 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 15:13:14
+ * @version 31.03.21 20:09:59
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage;
 
 use dicr\validate\StringsValidator;
+use dicr\validate\ValidateException;
 use dicr\yandex\metrika\AbstractRequest;
 use yii\httpclient\Request;
 
@@ -236,8 +237,12 @@ class CounterListRequest extends AbstractRequest
      */
     protected function httpRequest() : Request
     {
+        if (! $this->validate()) {
+            throw new ValidateException($this);
+        }
+
         return $this->client->httpClient
-            ->get(array_merge($this->json, ['/management/v1/counters']), null, $this->headers());
+            ->get(['/management/v1/counters'] + $this->json);
     }
 
     /**

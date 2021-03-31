@@ -1,14 +1,15 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 14:34:20
+ * @version 31.03.21 20:12:21
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage;
 
+use dicr\validate\ValidateException;
 use dicr\yandex\metrika\AbstractRequest;
 use yii\base\Exception;
 use yii\httpclient\Request;
@@ -40,8 +41,12 @@ class CounterUndeleteRequest extends AbstractRequest
      */
     protected function httpRequest() : Request
     {
+        if (! $this->validate()) {
+            throw new ValidateException($this);
+        }
+
         return $this->client->httpClient
-            ->post('/management/v1/counter/' . $this->counterId . '/undelete', null, $this->headers());
+            ->post('/management/v1/counter/' . $this->counterId . '/undelete');
     }
 
     /**

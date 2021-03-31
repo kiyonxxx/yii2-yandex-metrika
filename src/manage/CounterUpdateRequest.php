@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 21:31:08
+ * @version 31.03.21 20:14:07
  */
 
 declare(strict_types = 1);
@@ -11,6 +11,7 @@ namespace dicr\yandex\metrika\manage;
 
 use dicr\json\EntityValidator;
 use dicr\validate\StringsValidator;
+use dicr\validate\ValidateException;
 use dicr\yandex\metrika\AbstractRequest;
 use dicr\yandex\metrika\manage\entity\Counter;
 use dicr\yandex\metrika\manage\entity\CounterUpdate;
@@ -34,13 +35,13 @@ class CounterUpdateRequest extends AbstractRequest
      */
     public $field;
 
-    /** @var CounterUpdate параметры создаваемго счетчика */
+    /** @var CounterUpdate параметры создаваемого счетчика */
     public $counter;
 
     /**
      * @inheritDoc
      */
-    public function attributeEntities() : array
+    public function attributeEntities(): array
     {
         return array_merge(parent::attributeEntities(), [
             'counter' => CounterUpdate::class
@@ -50,7 +51,7 @@ class CounterUpdateRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             ['counterId', 'required'],
@@ -68,34 +69,26 @@ class CounterUpdateRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    public function attributesToJson() : array
+    protected function httpRequest(): Request
     {
-        return array_merge(parent::attributesToJson(), [
-            'field' => [static::class, 'formatArray']
+        if (! $this->validate()) {
+            throw new ValidateException($this);
+        }
+
+        $url = ['/management/v1/counter/' . $this->counterId];
+        if (! empty($this->field)) {
+            $url['field'] = self::formatArray($this->field);
+        }
+
+        return $this->client->httpClient->put($url, [
+            'counter' => $this->counter->json
         ]);
     }
 
     /**
      * @inheritDoc
      */
-    protected function httpRequest() : Request
-    {
-        $data = $this->json;
-
-        $url = ['/management/v1/counter/' . $this->counterId];
-        if (! empty($data['field'])) {
-            $url['field'] = $data['field'];
-        }
-
-        return $this->client->httpClient->put($url, [
-            'counter' => $data['counter']
-        ], $this->headers());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function send() : Counter
+    public function send(): Counter
     {
         $data = parent::send();
 

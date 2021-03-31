@@ -1,15 +1,14 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 14:36:54
+ * @version 31.03.21 20:11:36
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage;
 
-use dicr\json\EntityValidator;
 use dicr\yandex\metrika\AbstractResponse;
 use dicr\yandex\metrika\manage\entity\Counter;
 
@@ -27,25 +26,10 @@ class CounterListResponse extends AbstractResponse
     /**
      * @inheritDoc
      */
-    public function attributeEntities() : array
+    public function attributeEntities(): array
     {
         return array_merge(parent::attributeEntities(), [
             'counters' => [Counter::class]
-        ]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function rules() : array
-    {
-        return array_merge(parent::rules(), [
-            ['rows', 'required'],
-            ['rows', 'integer', 'min' => 0],
-            ['rows', 'filter', 'filter' => 'intval'],
-
-            ['counters', 'required'],
-            ['counters', EntityValidator::class]
         ]);
     }
 }

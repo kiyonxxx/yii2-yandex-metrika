@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 23:23:19
+ * @version 31.03.21 19:30:40
  */
 
 declare(strict_types = 1);
@@ -25,7 +25,7 @@ class ReportResponse extends AbstractResponse
     /** @var bool Признак того, что общее количество строк было округлено. */
     public $totalRowsRounded;
 
-    /** @var bool Признак семплирования. Показывает, был ли применен семплинг. Возможные значения: true, false. */
+    /** @var bool Признак сэмплирования. Показывает, был ли применен сэмплинг. Возможные значения: true, false. */
     public $sampled;
 
     /** @var ?bool Признак возможного отсутствия конфиденциальных данных в ответе. Возможные значения: true, false. */

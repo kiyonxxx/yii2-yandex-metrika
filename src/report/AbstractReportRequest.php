@@ -1,15 +1,16 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 23:43:26
+ * @version 31.03.21 21:53:00
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\report;
 
 use dicr\validate\StringsValidator;
+use dicr\validate\ValidateException;
 use dicr\yandex\metrika\AbstractRequest;
 use yii\httpclient\Request;
 
@@ -50,7 +51,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     public const ATTRIBUTION_LAST_DIRECT = 'last_yandex_direct_click';
 
     /** @var string[] */
-    public const ATTRIBUTIONS = [
+    public const ATTRIBUTION = [
         self::ATTRIBUTION_FIRST, self::ATTRIBUTION_LAST, self::ATTRIBUTION_LAST_SIGN, self::ATTRIBUTION_LAST_DIRECT
     ];
 
@@ -67,7 +68,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     public const CURRENCY_YND = 'YND';
 
     /** @var string[] */
-    public const CURRENCIES = [
+    public const CURRENCY = [
         self::CURRENCY_RUB, self::CURRENCY_USD, self::CURRENCY_EUR, self::CURRENCY_YND
     ];
 
@@ -111,7 +112,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     public const GROUP_YEAR = 'year';
 
     /** @var string[] */
-    public const GROUPS = [
+    public const GROUP = [
         self::GROUP_ALL, self::GROUP_AUTO, self::GROUP_MINUTES, self::GROUP_DEKAMINUTE, self::GROUP_MINUTE,
         self::GROUP_HOUR, self::GROUP_HOURS, self::GROUP_DAY, self::GROUP_WEEK, self::GROUP_MONTH, self::GROUP_YEAR
     ];
@@ -145,14 +146,14 @@ abstract class AbstractReportRequest extends AbstractRequest
 
     /**
      * @var ?string Точность вычисления результата. (ACCURACY_*)
-     * Позволяет управлять семплированием (количеством визитов, использованных при расчете итогового значения).
+     * Позволяет управлять сэмплированием (количеством визитов, использованных при расчете итогового значения).
      * Значение по умолчанию: medium
      */
     public $accuracy;
 
     /**
      * @var ?bool Если параметр выставлен в true, API имеет право автоматически увеличивать accuracy
-     * до рекомендованного значения. Когда идет запрос в маленькую таблицу с очень маленьким семплингом,
+     * до рекомендованного значения. Когда идет запрос в маленькую таблицу с очень маленьким сэмплингом,
      * параметр поможет получить осмысленные результаты
      */
     public $proposedAccuracy;
@@ -170,7 +171,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     public $pretty;
 
     /**
-     * @var ?string Часовой пояс в формате ±hh:mm в диапазоне [-23:59; +23:59], в котором будут расчитан период
+     * @var ?string Часовой пояс в формате ±hh:mm в диапазоне [-23:59; +23:59], в котором будет рассчитан период
      * выборки запроса, а также связанные с датой и временем группировки.
      * По умолчанию используется часовой пояс счетчика.
      */
@@ -201,7 +202,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             ['ids', 'required'],
@@ -213,9 +214,7 @@ abstract class AbstractReportRequest extends AbstractRequest
 
             ['metrics', 'default'],
             ['metrics', StringsValidator::class],
-            ['metrics', 'required', 'when' => function () : bool {
-                return empty($this->preset);
-            }],
+            ['metrics', 'required', 'when' => fn(): bool => empty($this->preset)],
 
             ['dimensions', 'default'],
             ['dimensions', StringsValidator::class],
@@ -249,17 +248,17 @@ abstract class AbstractReportRequest extends AbstractRequest
             ['timezone', 'match', 'pattern' => '~^[+-]\d{2}\:\d{2}$~u'],
 
             ['attribution', 'default'],
-            ['attribution', 'in', 'range' => self::ATTRIBUTIONS],
+            ['attribution', 'in', 'range' => self::ATTRIBUTION],
 
             ['currency', 'default'],
-            ['currency', 'in', 'range' => self::CURRENCIES],
+            ['currency', 'in', 'range' => self::CURRENCY],
 
             ['goalId', 'default'],
             ['goalId', 'integer', 'min' => 1],
             ['goalId', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true],
 
             ['group', 'default'],
-            ['group', 'in', 'range' => self::GROUPS],
+            ['group', 'in', 'range' => self::GROUP],
 
             ['experimentAb', 'default']
         ]);
@@ -268,7 +267,7 @@ abstract class AbstractReportRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    public function attributesToJson() : array
+    public function attributesToJson(): array
     {
         return [
             'ids' => [static::class, 'formatArray'],
@@ -286,21 +285,25 @@ abstract class AbstractReportRequest extends AbstractRequest
      *
      * @return string
      */
-    abstract protected function url() : string;
+    abstract protected function url(): string;
 
     /**
      * @inheritDoc
      */
-    protected function httpRequest() : Request
+    protected function httpRequest(): Request
     {
+        if (! $this->validate()) {
+            throw new ValidateException($this);
+        }
+
         return $this->client->httpClient
-            ->get(array_merge($this->json, [$this->url()]), null, $this->headers());
+            ->get([$this->url()] + $this->json);
     }
 
     /**
      * @inheritDoc
      */
-    public function send() : ReportResponse
+    public function send(): ReportResponse
     {
         return new ReportResponse([
             'json' => parent::send()

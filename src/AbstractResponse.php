@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 20:32:22
+ * @version 31.03.21 20:11:45
  */
 
 declare(strict_types = 1);
@@ -14,5 +14,5 @@ namespace dicr\yandex\metrika;
  */
 abstract class AbstractResponse extends Entity
 {
-
+    // noop
 }

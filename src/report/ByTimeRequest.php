@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 23:42:33
+ * @version 31.03.21 21:53:41
  */
 
 declare(strict_types = 1);
@@ -11,6 +11,7 @@ namespace dicr\yandex\metrika\report;
 
 use dicr\validate\StringsValidator;
 use dicr\yandex\metrika\report\entity\Annotation;
+use yii\helpers\Json;
 
 /**
  * Получение данных по времени
@@ -34,23 +35,37 @@ class ByTimeRequest extends AbstractReportRequest
      */
     public $annotationGroups;
 
-    /** @var string[]|null Выбор строк для построения графиков. Содержит перечисление списков ключей. */
+    /**
+     * @var string[][]|null Выбор строк для построения графиков. Содержит перечисление списков ключей.
+     * Массив массивов в формате JSON. Каждый подмассив может содержать значения измерений (name или id)
+     * соответственно заданному в запросе набору значений параметра dimensions. Длина подмассива указывает на
+     * измерения, по которым будут сгруппированы данные.
+     *   [['Россия']]
+     * или
+     *  [['Россия','Саратовская область','Саратов']]
+     * @link https://yandex.ru/dev/metrika/doc/api2/api_v1/examples.html#query
+     */
     public $rowIds;
 
-    /** @var ?int Задает количество строк результата, если не указан параметр row_ids. Значение по умолчанию: 7 */
+    /**
+     * @var ?int Задает количество строк результата, если не указан параметр row_ids. Значение по умолчанию: 7
+     * Параметр top_keys выбирает первые значения из набора данных первого измерения, указанного в запросе.
+     * Вы можете задать количество этих значений (максимум 30). Сортировка данных в ответе API производится
+     * по убыванию первого значения параметра metrics.
+     */
     public $topKeys;
 
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             [['date1', 'date2'], 'default'],
             [['date1', 'date2'], 'date', 'format' => 'php:Y-m-d'],
 
             ['group', 'default'],
-            ['group', 'in', 'range' => self::GROUPS],
+            ['group', 'in', 'range' => self::GROUP],
 
             ['includeAnnotations', 'default'],
             ['includeAnnotations', 'boolean'],
@@ -61,10 +76,9 @@ class ByTimeRequest extends AbstractReportRequest
             ['annotationGroups', 'each', 'rule' => ['in', 'range' => Annotation::GROUPS]],
 
             ['rowIds', 'default'],
-            ['rowIds', StringsValidator::class],
 
             ['topKeys', 'default'],
-            ['topKeys', 'integer', 'min' => 1],
+            ['topKeys', 'integer', 'min' => 1, 'max' => 30],
             ['topKeys', 'filter', 'filter' => 'intval', 'skipOnEmpty' => true]
         ]);
     }
@@ -77,7 +91,7 @@ class ByTimeRequest extends AbstractReportRequest
         return array_merge(parent::attributesToJson(), [
             'includeAnnotations' => [static::class, 'formatBoolean'],
             'annotationGroups' => [static::class, 'formatArray'],
-            'rowIds' => [static::class, 'formatArray'],
+            'rowIds' => static fn($val) => Json::encode($val),
         ]);
     }
 

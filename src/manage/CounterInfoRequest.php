@@ -1,15 +1,16 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 09.12.20 00:09:07
+ * @version 31.03.21 20:14:44
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika\manage;
 
 use dicr\validate\StringsValidator;
+use dicr\validate\ValidateException;
 use dicr\yandex\metrika\AbstractRequest;
 use dicr\yandex\metrika\manage\entity\Counter;
 use yii\httpclient\Request;
@@ -49,27 +50,19 @@ class CounterInfoRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    public function attributesToJson() : array
-    {
-        return array_merge(parent::attributesToJson(), [
-            'field' => [static::class, 'formatArray']
-        ]);
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function httpRequest() : Request
     {
-        $url = ['/management/v1/counter/' . $this->counterId];
+        if (! $this->validate()) {
+            throw new ValidateException($this);
+        }
 
-        $data = $this->json;
-        if (! empty($data['field'])) {
-            $url['field'] = $data['field'];
+        $url = ['/management/v1/counter/' . $this->counterId];
+        if (! empty($this->field)) {
+            $url['field'] = self::formatArray($this->field);
         }
 
         return $this->client->httpClient
-            ->get($url, null, $this->headers());
+            ->get($url);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 21:19:06
+ * @version 31.03.21 19:28:54
  */
 
 declare(strict_types = 1);
@@ -51,7 +51,7 @@ class CodeOptions extends Entity
 
     /* Недокументированные из JSON-ответа */
 
-    /** @var string название javascript-переменной для даных. По-умолчанию "dataLayer" */
+    /** @var string название javascript-переменной для данных. По-умолчанию "dataLayer" */
     public $ecommerceObject;
 
     /**

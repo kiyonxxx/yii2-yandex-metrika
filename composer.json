@@ -3,7 +3,7 @@
     "type": "yii2-extension",
     "license": "MIT",
     "homepage": "https://gitlab.com/dicr/yii2-yandex-metrika",
-    "description": "Яндекс.Метрика Report API клиент для Yii2",
+    "description": "Яндекс.Метрика API клиент для Yii2",
     "keywords": ["dicr", "yii2", "yandex", "metrika", "api", "client"],
     "authors": [
         {
@@ -19,11 +19,13 @@
     "minimum-stability": "RC",
     "prefer-stable": true,
     "require": {
-        "php": "~7.3",
+        "php": "~7.4 || ~8.0.1",
+        "ext-curl": "*",
+
         "yiisoft/yii2": "~2.0",
 
-        "dicr/yii2-helper": "~4.0",
-        "dicr/yii2-http": "~2.1",
+        "dicr/yii2-helper": "~4.5",
+        "dicr/yii2-http": "~2.2",
         "dicr/yii2-json": "~2.0",
         "dicr/yii2-validate": "~2.3"
     },
@@ -45,7 +47,7 @@
         {"type": "composer", "url": "https://asset-packagist.org"}
     ],
     "require-dev": {
-        "roave/security-advisories": "dev-master",
+        "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "~9.4"
     }
 }

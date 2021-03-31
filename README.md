@@ -5,35 +5,23 @@ API: https://yandex.ru/dev/metrika/doc/api2/concept/about.html
 ## Конфигурация
 
 ```php
-'components' => [
-    'metrika' => dicr\yandex\metrika\MetrikaClient::class,
-    'token' => 'Ваш API токен'
+$config = [
+    'components' => [
+        'metrika' => dicr\yandex\metrika\MetrikaClient::class,
+        'token' => 'Ваш Oauth API токен'
+    ]
 ];
 ```
 
 ## Использование
 
-### получаем клиент API
+### Получаем список счетчиков
 
 ```php
-use dicr\yandex\metrika\Metrika;
-use dicr\yandex\metrika\MetrikaClient;
-use dicr\yandex\metrika\manage\CounterListRequest;
-use dicr\yandex\metrika\manage\CounterListResponse;
-use dicr\yandex\metrika\manage\CounterInfoRequest;
-use dicr\yandex\metrika\manage\entity\Counter;
-use dicr\yandex\metrika\report\TableRequest;
-use dicr\yandex\metrika\report\ReportResponse;
-
-
-/** @var MetrikaClient $client */
+/** @var dicr\yandex\metrika\MetrikaClient $client */
 $client = Yii::$app->get('metrika');
-```
 
-### получаем список счетчиков
-
-```php
-/** @var CounterListResponse $res */
+/** @var dicr\yandex\metrika\manage\CounterListResponse $res */
 $res = $client->createRequest([
     'class' => dicr\yandex\metrika\manage\CounterListRequest::class,
 ])->send();
@@ -41,29 +29,35 @@ $res = $client->createRequest([
 echo 'Всего счетчиков: ' . $res->rows . "\n";
 ```
 
-### получаем информацию по счетчику
+### Получаем информацию по счетчику
 
 ```php
-/** @var Counter $res */
+/** @var dicr\yandex\metrika\MetrikaClient $client */
+$client = Yii::$app->get('metrika');
+
+/** @var dicr\yandex\metrika\manage\entity\Counter $res */
 $res = $client->createRequest([
-    'class' => CounterInfoRequest::class,
-    'counterId' => Metrika::TEST_COUNTER_ID
-]);
+    'class' => dicr\yandex\metrika\manage\CounterInfoRequest::class,
+    'counterId' => dicr\yandex\metrika\Metrika::TEST_COUNTER_ID
+])->send();
 
 echo 'Сайт счетчика: ' . $res->site2->site . "\n";
 ```
 
-### получаем таблицу отчета
+### Получаем таблицу отчета
 
 ```php
-/** @var ReportResponse $res */
+/** @var dicr\yandex\metrika\MetrikaClient $client */
+$client = Yii::$app->get('metrika');
+
+/** @var dicr\yandex\metrika\report\ReportResponse $res */
 $res = $client->createRequest([
     'class' => TableRequest::class,
     'ids' => [Metrika::TEST_COUNTER_ID],
     'metrics' => ['ym:s:pageviews']
-]);
+])->send();
 
 echo 'Количество строк в отчете: ' . $res->totalRows . "\n";
 ```
 
-API управления реализовано не пользовать - только работы со счетчиками.
+API управления реализовано не полностью - только получение информации для отчетов.

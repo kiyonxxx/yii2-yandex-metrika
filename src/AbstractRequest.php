@@ -1,16 +1,15 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 08.12.20 20:31:59
+ * @version 31.03.21 21:22:12
  */
 
 declare(strict_types = 1);
 namespace dicr\yandex\metrika;
 
-use dicr\validate\ValidateException;
-use Yii;
+use dicr\helper\Log;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
@@ -21,12 +20,6 @@ use yii\httpclient\Request;
  */
 abstract class AbstractRequest extends Entity
 {
-    /** @var string формат JSON */
-    public const FORMAT_JSON = 'json';
-
-    /** @var string формат CSV */
-    public const FORMAT_CSV = 'csv';
-
     /** @var MetrikaClient */
     protected $client;
 
@@ -44,26 +37,12 @@ abstract class AbstractRequest extends Entity
     }
 
     /**
-     * HTTP-заголовки.
-     *
-     * @return string[]
-     */
-    protected function headers() : array
-    {
-        return [
-            'Authorization' => 'OAuth ' . $this->client->token,
-            'Content-Type' => 'application/x-yametrika+json',
-            'Accept' => 'application/json'
-        ];
-    }
-
-    /**
      * Запрос.
      *
      * @return Request
-     * @throws InvalidConfigException
+     * @throws Exception
      */
-    abstract protected function httpRequest() : Request;
+    abstract protected function httpRequest(): Request;
 
     /**
      * Отправка запроса.
@@ -74,16 +53,20 @@ abstract class AbstractRequest extends Entity
      */
     public function send()
     {
-        if (! $this->validate()) {
-            throw new ValidateException($this);
-        }
-
+        // создаем запрос
         $request = $this->httpRequest();
 
-        Yii::debug('Запрос: ' . $request->toString(), __METHOD__);
-        $response = $request->send();
-        Yii::debug('Ответ: ' . $response->toString(), __METHOD__);
+        // добавляем токен
+        if (empty($this->client->token)) {
+            throw new InvalidConfigException('Не задан token доступа');
+        }
 
+        $request->headers->set('Authorization', 'OAuth ' . $this->client->token);
+
+        Log::debug('Запрос: ' . $request->toString(), __METHOD__);
+        $response = $request->send();
+
+        Log::debug('Ответ: ' . $response->toString(), __METHOD__);
         if (! $response->isOk) {
             throw new Exception('HTTP-ошибка: ' . $response->statusCode);
         }

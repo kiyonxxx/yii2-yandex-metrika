@@ -3,7 +3,7 @@
  * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 31.03.21 21:53:41
+ * @version 01.04.21 06:12:26
  */
 
 declare(strict_types = 1);
@@ -86,19 +86,19 @@ class ByTimeRequest extends AbstractReportRequest
     /**
      * @inheritDoc
      */
-    public function attributesToJson() : array
+    public function attributesToJson(): array
     {
         return array_merge(parent::attributesToJson(), [
             'includeAnnotations' => [static::class, 'formatBoolean'],
             'annotationGroups' => [static::class, 'formatArray'],
-            'rowIds' => static fn($val) => Json::encode($val),
+            'rowIds' => static fn($val) => ! empty($val) ? Json::encode($val) : null,
         ]);
     }
 
     /**
      * @inheritDoc
      */
-    protected function url() : string
+    protected function url(): string
     {
         return '/stat/v1/data/bytime';
     }

@@ -19,7 +19,7 @@
     "minimum-stability": "RC",
     "prefer-stable": true,
     "require": {
-        "php": "~7.4 || ~8.0.1",
+        "php": ">=7.4",
         "ext-curl": "*",
 
         "yiisoft/yii2": "~2.0",

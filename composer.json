@@ -29,10 +29,22 @@
         }
     },
     "repositories": [
-        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-helper.git"},
-        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-http.git"},
-        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-json.git"},
-        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-validate.git"},
+        {
+            "url": "https://github.com/kiyonxxx/yii2-helper",
+            "type": "vcs"
+        },
+        {
+            "url": "https://github.com/kiyonxxx/yii2-http",
+            "type": "vcs"
+        },
+        {
+            "url": "https://github.com/kiyonxxx/yii2-json",
+            "type": "vcs"
+        },
+        {
+            "url": "https://github.com/kiyonxxx/yii2-validate",
+            "type": "vcs"
+        },
         {"type": "composer", "url": "https://asset-packagist.org"}
     ],
     "require-dev": {
